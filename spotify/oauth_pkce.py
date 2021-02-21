@@ -6,6 +6,7 @@ from typing import List, Optional, Callable
 from urllib import parse
 
 import requests
+
 from setting import Setting
 
 
@@ -75,13 +76,7 @@ class OAuthPKCE:
         return answer
 
     def auth(self, callback_auth: Callable[[str], str]):
-        setting = Setting()
         auth_url = self.get_auth_url()
         response_url = callback_auth(auth_url)
         code = self.parse_response_url(response_url)
         return self.get_access_token(code)
-
-
-class Spotify:
-    def __init__(self, oauth: OAuthPKCE):
-        self.oauth = oauth
