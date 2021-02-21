@@ -14,11 +14,13 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(737, 523)
+        Dialog.resize(703, 459)
+        self.gridLayout = QtWidgets.QGridLayout(Dialog)
+        self.gridLayout.setObjectName("gridLayout")
         self.webEngineView = QtWebEngineWidgets.QWebEngineView(Dialog)
-        self.webEngineView.setGeometry(QtCore.QRect(10, 10, 721, 511))
         self.webEngineView.setUrl(QtCore.QUrl("about:blank"))
         self.webEngineView.setObjectName("webEngineView")
+        self.gridLayout.addWidget(self.webEngineView, 0, 0, 1, 1)
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)

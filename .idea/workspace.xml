@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6a57dda4-a213-428b-8bf0-83e469c078c6" name="Default Changelist" comment="" />
+    <list default="true" id="6a57dda4-a213-428b-8bf0-83e469c078c6" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spotify.py" beforeDir="false" afterPath="$PROJECT_DIR$/spotify.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ui/designer/mainwindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/ui/designer/mainwindow.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ui/designer/mainwindow.ui" beforeDir="false" afterPath="$PROJECT_DIR$/ui/designer/mainwindow.ui" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ui/designer/webauth.py" beforeDir="false" afterPath="$PROJECT_DIR$/ui/designer/webauth.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ui/designer/webauth.ui" beforeDir="false" afterPath="$PROJECT_DIR$/ui/designer/webauth.ui" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ui/web_auth.py" beforeDir="false" afterPath="$PROJECT_DIR$/ui/web_auth.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -14,7 +23,19 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
   <component name="ProjectId" id="1oWiyXoN57e6pRaTvNI45wAjHyz" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -58,13 +79,43 @@
       <updated>1613409001269</updated>
       <workItem from="1613409008327" duration="10000" />
       <workItem from="1613409029709" duration="4610000" />
+      <workItem from="1613470838169" duration="6233000" />
+      <workItem from="1613498597033" duration="599000" />
+      <workItem from="1613535667034" duration="1199000" />
+      <workItem from="1613635361365" duration="2041000" />
+      <workItem from="1613744014268" duration="2400000" />
+      <workItem from="1613905434259" duration="4936000" />
     </task>
+    <task id="LOCAL-00001" summary="Initial commit">
+      <created>1613470954434</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1613470954435</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Initial commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="Initial commit" />
+  </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/spolyrics$main.coverage" NAME="main Coverage Results" MODIFIED="1613413311554" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/spolyrics$main.coverage" NAME="main Coverage Results" MODIFIED="1613912642127" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
