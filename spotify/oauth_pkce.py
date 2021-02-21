@@ -7,7 +7,7 @@ from urllib import parse
 
 import requests
 
-from setting import Setting
+from spotify import TokenInfo, SaverToken, InvalidTokenException
 
 
 class AuthorizeError(Exception):
@@ -62,7 +62,7 @@ class OAuthPKCE:
 
         return qs_parsed['code'][0]
 
-    def get_access_token(self, code: str) -> dict:
+    def get_access_token(self, code: str) -> TokenInfo:
         data = {
             'client_id': self.client_id,
             'grant_type': 'authorization_code',
@@ -73,10 +73,20 @@ class OAuthPKCE:
 
         response = requests.post(self.URL_TOKEN, data=data)
         answer = response.json()
-        return answer
+        return TokenInfo.parse_response(answer)
 
-    def auth(self, callback_auth: Callable[[str], str]):
-        auth_url = self.get_auth_url()
-        response_url = callback_auth(auth_url)
-        code = self.parse_response_url(response_url)
-        return self.get_access_token(code)
+    def auth(self, callback_auth: Callable[[str], str]) -> TokenInfo:
+        saver = SaverToken()
+        try:
+            token_info = saver.get_token()
+        except InvalidTokenException:
+            token_info = None
+
+        if not token_info or not token_info.is_expired():
+            auth_url = self.get_auth_url()
+            response_url = callback_auth(auth_url)
+            code = self.parse_response_url(response_url)
+            token_info = self.get_access_token(code)
+            saver.save_token(token_info)
+
+        return token_info
