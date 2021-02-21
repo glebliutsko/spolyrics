@@ -21,6 +21,13 @@
        <widget class="QComboBox" name="serviceComboBox"/>
       </item>
       <item>
+       <widget class="QLabel" name="nameTrackLabel">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QTextEdit" name="lyricsTextEdit">
         <property name="readOnly">
          <bool>true</bool>

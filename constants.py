@@ -6,5 +6,5 @@ class Config:
 
 class Spotify:
     CLIENT_ID = '8c2c359638fb440a9f97e771647ffcb6'
-    REDIRECT_URL = 'https://open.spotify.com/'
+    REDIRECT_URL = 'https://www.spotify.com/'
     SCOPE = ['user-read-playback-state']

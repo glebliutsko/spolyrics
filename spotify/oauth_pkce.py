@@ -75,7 +75,7 @@ class OAuthPKCE:
         answer = response.json()
         return TokenInfo.parse_response(answer)
 
-    def auth(self, callback_auth: Callable[[str], str]) -> TokenInfo:
+    def auth(self, callback_auth: Callable[[str], str]) -> str:
         saver = SaverToken()
         try:
             token_info = saver.get_token()
@@ -89,4 +89,4 @@ class OAuthPKCE:
             token_info = self.get_access_token(code)
             saver.save_token(token_info)
 
-        return token_info
+        return token_info.token

@@ -12,6 +12,7 @@ class SaverToken:
 
     def get_token(self) -> TokenInfo:
         token_info_dict = self.config.spotify
+
         # Check fields on empty
         for i in token_info_dict.values():
             if i == '':
