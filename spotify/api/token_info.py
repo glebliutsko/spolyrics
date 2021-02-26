@@ -31,4 +31,4 @@ class TokenInfo:
         return token_info
 
     def is_expired(self) -> bool:
-        return self.expires > datetime.now()
+        return self.expires < datetime.now()

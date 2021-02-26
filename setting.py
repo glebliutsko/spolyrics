@@ -11,7 +11,6 @@ class Setting(metaclass=SingletonMeta):
     DEFAULT_CONFIG = {
         'base': {
             'version_config': '1.0',
-            'priority_service': ['genius'],
             'method': 'api'
         },
         'spotify': {
@@ -24,7 +23,6 @@ class Setting(metaclass=SingletonMeta):
     }
 
     def __init__(self, config_file: Optional[str] = None):
-        self.logger = logging.getLogger(self.__class__.__name__)
         self.config_file = config_file
         if self.config_file is None:
             self.config_file = constants.Config.DEFAULT_CONFIG_FILE
@@ -51,15 +49,12 @@ class Setting(metaclass=SingletonMeta):
 
     @spotify.setter
     def spotify(self, values: dict):
-        self.logger.debug(f'Change config "spotify"')
         self.__configs['spotify'] = values
 
     def _create_default_config(self):
-        self.logger.info(f'Restore default config.')
         self.__configs.read_dict(self.DEFAULT_CONFIG)
         self.save()
 
     def save(self):
-        self.logger.info(f'Saving config.')
         with open(self.config_file, 'w') as f:
             self.__configs.write(f)

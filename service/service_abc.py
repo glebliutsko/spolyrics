@@ -1,3 +1,3 @@
 class ServiceABC:
-    # TODO
-    pass
+    def get_text(self, track: str) -> str:
+        pass

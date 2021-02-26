@@ -1,22 +1,30 @@
+from time import sleep
+
+import requests
 from PyQt5.QtCore import QThread, pyqtSignal, QWaitCondition, QMutex
 
-from spotify import OAuthPKCE
-import requests
+import constants
+from spotify import SpotifyAPI, OAuthPKCE, Track
+
+
+class TrackLyrics:
+    track: Track
+    lyrics: str
+
 
 class SpotifyUpdater(QThread):
-    SPOTIFY_API = ''
+    authorization_required = pyqtSignal(str)
+    track_changed = pyqtSignal(str)
 
-    need_auth = pyqtSignal(str)
-
-    def __init__(self, oauth: OAuthPKCE, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super(SpotifyUpdater, self).__init__(*args, **kwargs)
 
-        self.oauth = oauth
-        self.token = None
+        oauth = OAuthPKCE(constants.Spotify.CLIENT_ID, constants.Spotify.REDIRECT_URL, constants.Spotify.SCOPE)
+        self.api = SpotifyAPI(self.auth, 'ru', oauth)
 
         self.__session = requests.session()
 
-        self.conn = QWaitCondition()
+        self.wait_authorization = QWaitCondition()
 
         # Небольшой хак. После завершения авторизайии, сюда будет записан URL Redirect с кодом.
         self.url_with_code = None
@@ -24,20 +32,19 @@ class SpotifyUpdater(QThread):
     def auth_complete(self, url):
         self.url_with_code = url
 
-    def auth(self):
-        def callback(url: str) -> str:
-            self.need_auth.emit(url)
-            # Ожидаем завершения авторизации
-            self.conn.wait(QMutex())
-            return self.url_with_code
+    def auth(self, url: str) -> str:
+        self.authorization_required.emit(url)
+        # Ожидаем завершения авторизации
+        self.wait_authorization.wait(QMutex())
+        return self.url_with_code
 
-        self.token = self.oauth.auth(callback)
-        self.__session.headers.update({'Authorization': f'Bearer {self.token}'})
-
-    def run(self) -> None:
-        if not self.token:
-            self.auth()
+    def run(self):
+        if not self.api.is_auth:
+            self.api.auth()
 
         while True:
-            pass
+            current_track = self.api.get_current_track()
+            if current_track is not None:
+                self.track_changed.emit(f'Hello World: {current_track}')
 
+            sleep(1)

@@ -7,7 +7,7 @@ from urllib import parse
 
 import requests
 
-from spotify import TokenInfo, SaverToken, InvalidTokenException
+from spotify import TokenInfo, SaverToken, TokenNotSave
 
 
 class AuthorizeError(Exception):
@@ -26,8 +26,7 @@ class OAuthPKCE:
         if self.scope is None:
             self.scope = list()
 
-        self.code_verifier = self.get_code_verifier()
-        self.code_challenge = self.get_code_challenge()
+        self._generate_codes()
 
     @classmethod
     def get_code_verifier(cls) -> str:
@@ -39,6 +38,10 @@ class OAuthPKCE:
         code_challenge_hash = hashlib.sha256(self.code_verifier.encode('utf-8')).digest()
         code_challenge = base64.urlsafe_b64encode(code_challenge_hash).decode('utf-8')
         return code_challenge.replace('=', '')
+
+    def _generate_codes(self):
+        self.code_verifier = self.get_code_verifier()
+        self.code_challenge = self.get_code_challenge()
 
     def get_auth_url(self) -> str:
         params = {
@@ -79,14 +82,14 @@ class OAuthPKCE:
         saver = SaverToken()
         try:
             token_info = saver.get_token()
-        except InvalidTokenException:
-            token_info = None
+            if not token_info.is_expired():
+                return token_info.token
+        except TokenNotSave:
+            pass
 
-        if not token_info or not token_info.is_expired():
-            auth_url = self.get_auth_url()
-            response_url = callback_auth(auth_url)
-            code = self.parse_response_url(response_url)
-            token_info = self.get_access_token(code)
-            saver.save_token(token_info)
-
+        auth_url = self.get_auth_url()
+        response_url = callback_auth(auth_url)
+        code = self.parse_response_url(response_url)
+        token_info = self.get_access_token(code)
+        saver.save_token(token_info)
         return token_info.token

@@ -2,7 +2,7 @@ from setting import Setting
 from spotify import TokenInfo
 
 
-class InvalidTokenException(Exception):
+class TokenNotSave(Exception):
     pass
 
 
@@ -13,10 +13,11 @@ class SaverToken:
     def get_token(self) -> TokenInfo:
         token_info_dict = self.config.spotify
 
-        # Check fields on empty
+        # Если у нас есть хоть одно пустое поле, то мы считаем, что
+        # токен не сохранялся.
         for i in token_info_dict.values():
             if i == '':
-                raise InvalidTokenException()
+                raise TokenNotSave()
 
         return TokenInfo.parse_dict(token_info_dict)
 
