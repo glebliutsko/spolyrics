@@ -6,19 +6,19 @@ import requests
 from PyQt5.QtCore import QThread, pyqtSignal, QWaitCondition
 
 import constants
-from services import Genius
 from spotify import SpotifyAPI, OAuthPKCE, Track
 from utils import WaitingData
 
 if TYPE_CHECKING:
     from main import Application
+    from services import ServiceABC
 
 
 class SpotifyUpdater(QThread):
     authorization_required = pyqtSignal(WaitingData, str, str)
     track_changed = pyqtSignal(Track, str)
 
-    def __init__(self, app: 'Application', *args, **kwargs):
+    def __init__(self, app: 'Application', service: 'ServiceABC', *args, **kwargs):
         self.logger = logging.getLogger('spolyrics')
 
         super(SpotifyUpdater, self).__init__(*args, **kwargs)
@@ -31,7 +31,12 @@ class SpotifyUpdater(QThread):
 
         self.wait_authorization = QWaitCondition()
 
-        self.service = Genius()
+        self.service = service
+        self.current_track = None
+
+    def change_service(self, service: 'ServiceABC'):
+        self.logger.debug(f'Change service: {service.__class__}')
+        self.service = service
         self.current_track = None
 
     def auth(self, url: str) -> str:

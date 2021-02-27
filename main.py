@@ -20,12 +20,18 @@ class Application:
 
         self.app = QApplication(sys.argv)
 
-        self.updater = SpotifyUpdater(self)
-        self.updater.authorization_required.connect(self.browser_authorization)
+        self.config = Config()
 
         self.window = MainWindow(self)
         self.webauth = WebAuth(self)
-        self.config = Config()
+
+        self.updater = SpotifyUpdater(self, self.window.ui.serviceComboBox.currentData()())
+
+        self.updater.authorization_required.connect(self.browser_authorization)
+        self.updater.track_changed.connect(self.window.update_track)
+        self.window.ui.serviceComboBox.currentIndexChanged.connect(
+            lambda index: self.updater.change_service(self.window.SERVICES_TEXT[index]())
+        )
 
         self.logger.debug('Application initialized.')
 

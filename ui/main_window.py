@@ -23,8 +23,6 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-        self.app.updater.track_changed.connect(self.update_track)
-
         self.current_track = None
 
         for service in self.SERVICES_TEXT:

@@ -86,6 +86,7 @@ class OAuthPKCE:
         try:
             token_info = saver.get_token()
             if not token_info.is_expired():
+                # TODO: Refresh token
                 self.logger.info(f'Using cached token: {token_info.token[:5]}...')
                 return token_info.token
         except TokenNotSave:
