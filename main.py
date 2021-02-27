@@ -20,12 +20,12 @@ class Application:
 
         self.app = QApplication(sys.argv)
 
+        self.updater = SpotifyUpdater(self)
+        self.updater.authorization_required.connect(self.browser_authorization)
+
         self.window = MainWindow(self)
         self.webauth = WebAuth(self)
         self.config = Config()
-
-        self.updater = SpotifyUpdater(self)
-        self.updater.authorization_required.connect(self.browser_authorization)
 
         self.logger.debug('Application initialized.')
 

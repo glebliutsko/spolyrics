@@ -13,9 +13,12 @@ class Track(NamedTuple):
     album: str
     artists: List[str]
 
+    def __eq__(self, other: 'Track'):
+        return self.id == other.id
+
 
 class SpotifyAPI:
-    API_URL = 'https://api.spotify.com/v1/'
+    API_BASE_URL = 'https://api.spotify.com/v1/'
 
     def __init__(self, lang: str, oauth: OAuthPKCE):
         self.logger = logging.getLogger('spolyrics')
@@ -39,7 +42,7 @@ class SpotifyAPI:
         self.__session.headers.update({'Accept-Language': lang})
 
     def _get(self, endpoint: str, params: Optional[dict] = None) -> Optional[dict]:
-        url_endpoint = urljoin(self.API_URL, endpoint)
+        url_endpoint = urljoin(self.API_BASE_URL, endpoint)
         if params is None:
             params = {}
 

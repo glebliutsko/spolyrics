@@ -17,8 +17,8 @@ class AuthorizeError(Exception):
 
 class OAuthPKCE:
     ALLOW_CODE_CHARS = string.ascii_letters + string.digits + '_.-~'
-    URL_AUTHORIZE = 'https://accounts.spotify.com/authorize'
-    URL_TOKEN = 'https://accounts.spotify.com/api/token'
+    AUTHORIZE_BASE_URL = 'https://accounts.spotify.com/authorize'
+    TOKEN_BASE_URL = 'https://accounts.spotify.com/api/token'
 
     def __init__(self, client_id: str, redirect_uri: str, scope: Optional[List[str]] = None):
         self.logger = logging.getLogger('spolyrics')
@@ -55,7 +55,7 @@ class OAuthPKCE:
         }
 
         params_string = parse.urlencode(params)
-        return f'{self.URL_AUTHORIZE}?{params_string}'
+        return f'{self.AUTHORIZE_BASE_URL}?{params_string}'
 
     @classmethod
     def parse_response_url(cls, url: str) -> str:
@@ -75,7 +75,7 @@ class OAuthPKCE:
             'code_verifier': self.code_verifier
         }
 
-        response = requests.post(self.URL_TOKEN, data=data)
+        response = requests.post(self.TOKEN_BASE_URL, data=data)
         answer = response.json()
         return TokenInfo.parse_response(answer)
 

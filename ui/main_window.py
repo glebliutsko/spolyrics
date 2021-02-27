@@ -8,6 +8,7 @@ from ui.designer.mainwindow import Ui_MainWindow
 
 if TYPE_CHECKING:
     from main import Application
+    from spotify.api.spotify_api import Track
 
 
 class MainWindow(QMainWindow):
@@ -22,25 +23,13 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
+        self.app.updater.track_changed.connect(self.update_track)
+
         self.current_track = None
 
         for service in self.SERVICES_TEXT:
             self.ui.serviceComboBox.addItem(service.NAME, service)
-        self.ui.serviceComboBox.currentIndexChanged.connect(self.update_service)
-        self.service = self.ui.serviceComboBox.currentData()
 
-    def update_service(self, *args):
-        self.service = self.ui.serviceComboBox.currentData()
-        self.update_text()
-
-    def spotify_track_change(self, new_track):
-        self.current_track = new_track
-        self.update_text()
-
-    def update_text(self):
-        if self.current_track is None:
-            return
-
-        service = self.ui.serviceComboBox.currentData()()
-        text = service.get_text(self.current_track)
-        self.ui.lyricsTextEdit.setText(text)
+    def update_track(self, track: 'Track', lyrics: str):
+        self.ui.nameTrackLabel.setText(f'{track.title} - {track.album}')
+        self.ui.lyricsTextEdit.setText(lyrics)
