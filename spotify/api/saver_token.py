@@ -1,4 +1,7 @@
-from setting import Setting
+import json
+import os
+
+import constants
 from spotify import TokenInfo
 
 
@@ -8,19 +11,17 @@ class TokenNotSave(Exception):
 
 class SaverToken:
     def __init__(self):
-        self.config = Setting()
+        self.filename = os.path.join(constants.Config.DEFAULT_DIRECTORY_SAVE_AUTH, 'spotify.json')
 
     def get_token(self) -> TokenInfo:
-        token_info_dict = self.config.spotify
+        if not os.path.exists(self.filename):
+            raise TokenNotSave()
 
-        # Если у нас есть хоть одно пустое поле, то мы считаем, что
-        # токен не сохранялся.
-        for i in token_info_dict.values():
-            if i == '':
-                raise TokenNotSave()
+        with open(self.filename, 'r') as f:
+            token_info_dict = json.load(f)
 
         return TokenInfo.parse_dict(token_info_dict)
 
     def save_token(self, token_info: TokenInfo):
-        self.config.spotify = token_info.to_dict()
-        self.config.save()
+        with open(self.filename, 'w') as f:
+            json.dump(token_info.to_dict(), f)
