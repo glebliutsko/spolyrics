@@ -1,3 +1,4 @@
+import logging
 from time import sleep
 from typing import TYPE_CHECKING
 
@@ -22,6 +23,8 @@ class SpotifyUpdater(QThread):
     track_changed = pyqtSignal(str)
 
     def __init__(self, app: 'Application', *args, **kwargs):
+        self.logger = logging.getLogger('spolyrics')
+
         super(SpotifyUpdater, self).__init__(*args, **kwargs)
         self.app = app
 
@@ -43,9 +46,11 @@ class SpotifyUpdater(QThread):
         if not self.api.is_auth:
             self.api.auth(self.auth)
 
+        self.logger.info('Start loop updater.')
         while True:
             current_track = self.api.get_current_track()
-            print(current_track)
+            self.logger.debug(f'Current track: {current_track}')
+
             if current_track is not None:
                 self.track_changed.emit(f'Hello World: {current_track}')
 

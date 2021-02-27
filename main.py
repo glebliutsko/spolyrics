@@ -1,3 +1,4 @@
+import logging
 import sys
 from typing import TYPE_CHECKING
 
@@ -15,6 +16,8 @@ if TYPE_CHECKING:
 
 class Application:
     def __init__(self):
+        self.logger = logging.getLogger('spolyrics')
+
         self.app = QApplication(sys.argv)
 
         self.window = MainWindow(self)
@@ -24,21 +27,28 @@ class Application:
         self.updater = SpotifyUpdater(self)
         self.updater.authorization_required.connect(self.browser_authorization)
 
+        self.logger.debug('Application initialized.')
+
     def browser_authorization(self, signal: 'WaitingData', url: str, redirect_url: str):
         def change_url(qurl: QUrl):
             url = qurl.url()
+            self.logger.debug(f'Browser authentication redirect: {url}')
 
             # Если мы попали на redirect_url, то авторизация пройдена.
             if url.startswith(redirect_url):
+                self.logger.info(f'Browser authentication done: {url}')
                 signal.wakeup(url)
                 self.webauth.ui.webEngineView.urlChanged.disconnect(change_url)
                 self.webauth.close()
 
-        self.webauth.ui.webEngineView.urlChanged.connect(change_url)
+        self.logger.info(f'Browser authentication begin: {url}')
+
         self.webauth.ui.webEngineView.setUrl(QUrl.fromUserInput(url))
+        self.webauth.ui.webEngineView.urlChanged.connect(change_url)
         self.webauth.exec()
 
     def run(self):
+        self.logger.info('Application launch.')
         self.window.show()
 
         self.updater.start()
@@ -46,5 +56,7 @@ class Application:
 
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG)
+
     app = Application()
     app.run()
