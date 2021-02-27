@@ -1,24 +1,18 @@
-import logging
 import os
 from configparser import ConfigParser
 from typing import Optional
 
 import constants
-from utils import SingletonMeta
 
 
-class Setting(metaclass=SingletonMeta):
+class Config():
     DEFAULT_CONFIG = {
         'base': {
-            'version_config': '1.0',
-            'method': 'api'
+            'version_config': '1.0'
         },
         'spotify': {
-            'token': '',
-            'token_type': '',
-            'scope': '',
-            'expires': '',
-            'refresh_token': ''
+            'update_timeout': '1',
+            'update_method': 'api'
         }
     }
 
@@ -36,20 +30,16 @@ class Setting(metaclass=SingletonMeta):
             self._create_default_config()
 
     @property
-    def method(self):
-        return self.__configs['base']['method']
-
-    @property
-    def version(self) -> str:
+    def version_config(self) -> str:
         return self.__configs['base']['version_config']
 
     @property
-    def spotify(self) -> dict:
-        return dict(self.__configs['spotify'])
+    def update_method(self):
+        return self.__configs['spotify']['update_method']
 
-    @spotify.setter
-    def spotify(self, values: dict):
-        self.__configs['spotify'] = values
+    @property
+    def update_timeout(self):
+        return self.__configs['spotify']['update_timeout']
 
     def _create_default_config(self):
         self.__configs.read_dict(self.DEFAULT_CONFIG)

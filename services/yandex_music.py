@@ -1,4 +1,4 @@
-from service import ServiceABC
+from services import ServiceABC
 
 
 class YandexMusic(ServiceABC):

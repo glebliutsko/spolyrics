@@ -13,10 +13,9 @@ class Track(NamedTuple):
 class SpotifyAPI:
     API_URL = 'https://api.spotify.com/v1'
 
-    def __init__(self, callback_auth: Callable[[str], str], lang: str, oauth: OAuthPKCE):
+    def __init__(self, lang: str, oauth: OAuthPKCE):
         self.oauth = oauth
         self.__session = requests.session()
-        self.callback_auth = callback_auth
         self.set_lang(lang)
         self.is_auth = False
 
@@ -24,8 +23,8 @@ class SpotifyAPI:
         self.__session.headers.update({'Authorization': f'Bearer {token}'})
         self.is_auth = True
 
-    def auth(self):
-        token = self.oauth.auth(self.callback_auth)
+    def auth(self, callback_auth: Callable[[str], str]):
+        token = self.oauth.auth(callback_auth)
         self._set_authorization_header(token)
 
     def set_lang(self, lang: str):

@@ -1,11 +1,13 @@
-from PyQt5.QtCore import QUrl, pyqtSignal
-from PyQt5.QtWidgets import QMainWindow, QMessageBox
+from typing import TYPE_CHECKING
 
-import constants
-from service import Genius, YandexMusic
-from spotify import SpotifyUpdater, OAuthPKCE
+from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtWidgets import QMainWindow
+
+from services import Genius, YandexMusic
 from ui.designer.mainwindow import Ui_MainWindow
-from ui.web_auth import WebAuth
+
+if TYPE_CHECKING:
+    from main import Application
 
 
 class MainWindow(QMainWindow):
@@ -13,8 +15,9 @@ class MainWindow(QMainWindow):
 
     SERVICES_TEXT = [Genius, YandexMusic]
 
-    def __init__(self):
+    def __init__(self, app: 'Application'):
         super(QMainWindow, self).__init__()
+        self.app = app
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
@@ -23,19 +26,11 @@ class MainWindow(QMainWindow):
 
         for service in self.SERVICES_TEXT:
             self.ui.serviceComboBox.addItem(service.NAME, service)
-        self.ui.serviceComboBox.currentIndexChanged.connect(self.change_service)
+        self.ui.serviceComboBox.currentIndexChanged.connect(self.update_service)
+        self.service = self.ui.serviceComboBox.currentData()
 
-        self.webauth = WebAuth()
-
-        self.updater = SpotifyUpdater()
-
-        self.auth_complete.connect(self.updater.auth_complete)
-        self.updater.authorization_required.connect(self.spotify_authorization_required)
-        self.updater.track_changed.connect(self.spotify_track_change)
-
-        self.updater.start()
-
-    def change_service(self, index: int):
+    def update_service(self, *args):
+        self.service = self.ui.serviceComboBox.currentData()
         self.update_text()
 
     def spotify_track_change(self, new_track):
@@ -49,17 +44,3 @@ class MainWindow(QMainWindow):
         service = self.ui.serviceComboBox.currentData()()
         text = service.get_text(self.current_track)
         self.ui.lyricsTextEdit.setText(text)
-
-    def spotify_authorization_required(self, url: str):
-        def change_url(qurl: QUrl):
-            url = qurl.url()
-
-            if url.startswith(constants.Spotify.REDIRECT_URL):
-                self.auth_complete.emit(url)
-                self.updater.wait_authorization.wakeAll()
-                self.webauth.close()
-
-        self.webauth.ui.webEngineView.setUrl(QUrl(url))
-        self.webauth.show()
-
-        self.webauth.ui.webEngineView.urlChanged.connect(change_url)
