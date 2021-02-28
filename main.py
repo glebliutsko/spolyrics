@@ -9,6 +9,7 @@ from config import Config
 from spotify import SpotifyUpdater
 from ui.main_window import MainWindow
 from ui.web_auth import WebAuth
+import signal
 
 if TYPE_CHECKING:
     from utils import WaitingData
@@ -55,6 +56,7 @@ class Application:
 
     def run(self):
         self.logger.info('Application launch.')
+        signal.signal(signal.SIGINT, signal.SIG_DFL)
         self.window.show()
 
         self.updater.start()

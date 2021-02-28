@@ -79,24 +79,38 @@ class OAuthPKCE:
         answer = response.json()
         return TokenInfo.parse_response(answer)
 
+    def refresh_token(self, refresh_token: TokenInfo):
+        data = {
+            'grant_type': 'refresh_token',
+            'refresh_token': refresh_token.refresh_token,
+            'client_id': self.client_id
+        }
+
+        response = requests.post(self.TOKEN_BASE_URL, data=data)
+        answer = response.json()
+        return TokenInfo.parse_response(answer)
+
     def auth(self, callback_auth: Callable[[str], str]) -> str:
         self._generate_codes()
 
         saver = SaverToken()
         try:
             token_info = saver.get_token()
-            if not token_info.is_expired():
-                # TODO: Refresh token
+            if token_info.is_expired():
+                self.logger.info(f'Refresh token: {token_info.token[:5]}...')
+                token_info = self.refresh_token(token_info)
+                self.logger.info(f'New token: {token_info.token[:5]}...')
+                saver.save_token(token_info)
+            else:
                 self.logger.info(f'Using cached token: {token_info.token[:5]}...')
-                return token_info.token
+
+            return token_info.token
         except TokenNotSave:
-            pass
+            auth_url = self.get_auth_url()
+            response_url = callback_auth(auth_url)
+            code = self.parse_response_url(response_url)
+            token_info = self.get_access_token(code)
+            self.logger.info(f'New token received: {token_info.token[:5]}')
 
-        auth_url = self.get_auth_url()
-        response_url = callback_auth(auth_url)
-        code = self.parse_response_url(response_url)
-        token_info = self.get_access_token(code)
-        self.logger.info(f'New token received: {token_info.token[:5]}')
-
-        saver.save_token(token_info)
-        return token_info.token
+            saver.save_token(token_info)
+            return token_info.token

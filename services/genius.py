@@ -22,5 +22,10 @@ class Genius(ServiceABC):
         self.api = GeniusAPI(constants.Genius.TOKEN, verbose=False)
 
     def get_text(self, track: 'Track') -> Optional[str]:
-        track = self.api.search_song(track.title, track.artists[0])
+        track = self.api.search_song(track.title.replace(' - Bonus Track', ''), track.artists[0])
+        if track is None:
+            self.logger.info(f'Genius: Track not found: {track}')
+            return
+
+        self.logger.debug(f'Genius: Found track: {track.title} ({track.id})')
         return track.lyrics

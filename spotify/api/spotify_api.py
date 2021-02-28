@@ -13,6 +13,9 @@ class Track(NamedTuple):
     album: str
     artists: List[str]
 
+    def artists_str(self):
+        return ', '.join(self.artists)
+
     def __eq__(self, other: 'Track'):
         return self.id == other.id
 

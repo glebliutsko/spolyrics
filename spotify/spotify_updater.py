@@ -59,7 +59,6 @@ class SpotifyUpdater(QThread):
                 self.logger.info(f'Update current track: {current_track}')
 
                 self.current_track = current_track
-
                 lyrics = self.service.get_text(current_track)
 
                 self.track_changed.emit(current_track, lyrics)

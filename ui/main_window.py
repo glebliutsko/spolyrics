@@ -1,4 +1,5 @@
-from typing import TYPE_CHECKING
+import webbrowser
+from typing import TYPE_CHECKING, Optional
 
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import QMainWindow
@@ -23,11 +24,20 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-        self.current_track = None
+        # TODO: Проброс настоящей ссылки
+        self.url = 'https://example.com/'
 
         for service in self.SERVICES_TEXT:
             self.ui.serviceComboBox.addItem(service.NAME, service)
 
-    def update_track(self, track: 'Track', lyrics: str):
-        self.ui.nameTrackLabel.setText(f'{track.title} - {track.album}')
-        self.ui.lyricsTextEdit.setText(lyrics)
+        self.ui.nameTrackLabel.mousePressEvent = self.open_link_browser
+
+    def update_track(self, track: 'Track', lyrics: Optional[str], url: Optional[str] = None):
+        self.ui.nameTrackLabel.setText(f'{track.artists_str()} - {track.title}')
+        if lyrics != '':
+            self.ui.lyricsTextEdit.setText(lyrics)
+        else:
+            self.ui.lyricsTextEdit.setText('Lyrics not found.')
+
+    def open_link_browser(self, *args):
+        webbrowser.open(self.url)
