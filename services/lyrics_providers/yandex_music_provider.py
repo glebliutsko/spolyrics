@@ -1,3 +1,4 @@
+import logging
 from typing import Optional, TYPE_CHECKING
 
 import yandex_music
@@ -14,21 +15,27 @@ class YandexMusicProvider(LyricsProviderABC):
     NAME = 'music.yandex.ru'
 
     def __init__(self):
+        self.logger = logging.getLogger('spolyrics')
+
         self.api = yandex_music.Client(fetch_account_status=False)
 
     def get_text(self, track: 'Track') -> Optional[str]:
         try:
             search_result = self.api.search(f'{track.artists_str()} - {track.title}').tracks
             if search_result is None:
+                self.logger.info(f'YandexMusicProvider: Track not found: {track}')
                 return
 
-            best_track = search_result.results[0]
-            supplement = best_track.get_supplement()
+            track_yandex_music = search_result.results[0]
+            supplement = track_yandex_music.get_supplement()
             if supplement.lyrics is None:
+                self.logger.info(f'YandexMusicProvider: Lyrics for {track_yandex_music.title} '
+                                 f'({track_yandex_music.id}) not found.')
                 return None
         except yandex_music.exceptions.BadRequest as e:
             raise APIError(self.__class__, e)
         except yandex_music.exceptions.NetworkError as e:
             raise NetworkError(self.__class__, e)
 
+        self.logger.debug(f'YandexMusicProvider: Found track: {track_yandex_music.title} ({track_yandex_music.id})')
         return supplement.lyrics.full_lyrics

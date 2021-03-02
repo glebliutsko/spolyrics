@@ -1,6 +1,5 @@
 import logging
 from datetime import datetime
-from time import sleep
 from typing import TYPE_CHECKING
 
 import requests
@@ -153,4 +152,4 @@ class SpotifyUpdater(QThread):
                 self.logger.error(f'Notwork error: {e}')
                 self.status_change.emit(NetworkErrorStatus())
 
-            sleep(int(self.app.config.update_timeout))
+            self.sleep(int(self.app.config.update_timeout))

@@ -26,13 +26,13 @@ class GeniusProvider(LyricsProviderABC):
 
     def get_text(self, track: 'Track') -> Optional[str]:
         try:
-            track = self.api.search_song(track.title.replace(' - Bonus Track', ''), track.artists[0])
-            if track is None:
-                self.logger.info(f'GeniusProvider: Track not found: {track}')
+            track_genius = self.api.search_song(track.title.replace(' - Bonus Track', ''), track.artists[0])
+            if track_genius is None:
+                self.logger.info(f'GeniusProvider: Track not found: {track_genius}')
                 return
 
-            self.logger.debug(f'GeniusProvider: Found track: {track.title} ({track.id})')
-            return track.lyrics
+            self.logger.debug(f'GeniusProvider: Found track: {track_genius.title} ({track_genius.id})')
+            return track_genius.lyrics
         except requests.exceptions.HTTPError as e:
             raise APIError(self.__class__, e)
         except requests.exceptions.RequestException as e:
