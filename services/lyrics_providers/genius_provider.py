@@ -4,13 +4,13 @@ from typing import TYPE_CHECKING, Optional
 from lyricsgenius import Genius as GeniusAPI
 
 import constants
-from services import ServiceABC
+from services.lyrics_providers import LyricsProviderABC
 
 if TYPE_CHECKING:
-    from spotify import Track
+    from services.spotify import Track
 
 
-class Genius(ServiceABC):
+class GeniusProvider(LyricsProviderABC):
     NAME = 'genius.com'
 
     API_BASE_URL = 'https://api.genius.com/'
@@ -24,8 +24,8 @@ class Genius(ServiceABC):
     def get_text(self, track: 'Track') -> Optional[str]:
         track = self.api.search_song(track.title.replace(' - Bonus Track', ''), track.artists[0])
         if track is None:
-            self.logger.info(f'Genius: Track not found: {track}')
+            self.logger.info(f'GeniusProvider: Track not found: {track}')
             return
 
-        self.logger.debug(f'Genius: Found track: {track.title} ({track.id})')
+        self.logger.debug(f'GeniusProvider: Found track: {track.title} ({track.id})')
         return track.lyrics

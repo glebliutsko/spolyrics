@@ -8,7 +8,7 @@ from urllib import parse
 
 import requests
 
-from spotify import TokenInfo, SaverToken, TokenNotSave
+from services.spotify import TokenInfo, SaverToken, TokenNotSave
 
 
 class AuthorizeError(Exception):

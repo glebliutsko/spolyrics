@@ -6,7 +6,7 @@ from PyQt5.QtCore import QUrl
 from PyQt5.QtWidgets import QApplication
 
 from config import Config
-from spotify import SpotifyUpdater
+from services import SpotifyUpdater
 from ui.main_window import MainWindow
 from ui.web_auth import WebAuth
 import signal

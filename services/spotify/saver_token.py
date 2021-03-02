@@ -3,7 +3,7 @@ import logging
 import os
 
 import constants
-from spotify import TokenInfo
+from services.spotify import TokenInfo
 
 
 class TokenNotSave(Exception):

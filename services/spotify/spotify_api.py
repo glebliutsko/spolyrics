@@ -4,7 +4,7 @@ from urllib.parse import urljoin
 
 import requests
 
-from spotify.api.oauth_pkce import OAuthPKCE
+from services.spotify import OAuthPKCE
 
 
 class Track(NamedTuple):
@@ -41,7 +41,7 @@ class SpotifyAPI:
         self._set_authorization_header(token)
 
     def set_lang(self, lang: str):
-        self.logger.debug(f'Set lang spotify api: {lang}')
+        self.logger.debug(f'Set lang spotify spotify: {lang}')
         self.__session.headers.update({'Accept-Language': lang})
 
     def _get(self, endpoint: str, params: Optional[dict] = None) -> Optional[dict]:

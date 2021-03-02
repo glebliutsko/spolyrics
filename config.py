@@ -12,7 +12,7 @@ class Config():
         },
         'spotify': {
             'update_timeout': '1',
-            'update_method': 'api'
+            'update_method': 'spotify'
         }
     }
 

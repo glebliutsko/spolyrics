@@ -2,13 +2,13 @@ from typing import Optional, TYPE_CHECKING
 
 import yandex_music
 
-from services import ServiceABC
+from services.lyrics_providers import LyricsProviderABC
 
 if TYPE_CHECKING:
-    from spotify import Track
+    from services.spotify import Track
 
 
-class YandexMusic(ServiceABC):
+class YandexMusicProvider(LyricsProviderABC):
     NAME = 'music.yandex.ru'
 
     def __init__(self):

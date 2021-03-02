@@ -4,18 +4,18 @@ from typing import TYPE_CHECKING, Optional
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import QMainWindow
 
-from services import Genius, YandexMusic
+from services.lyrics_providers import GeniusProvider, YandexMusicProvider
 from ui.designer.mainwindow import Ui_MainWindow
 
 if TYPE_CHECKING:
     from main import Application
-    from spotify.api.spotify_api import Track
+    from services.spotify.spotify_api import Track
 
 
 class MainWindow(QMainWindow):
     auth_complete = pyqtSignal(str)
 
-    SERVICES_TEXT = [Genius, YandexMusic]
+    SERVICES_TEXT = [GeniusProvider, YandexMusicProvider]
 
     def __init__(self, app: 'Application'):
         super(QMainWindow, self).__init__()

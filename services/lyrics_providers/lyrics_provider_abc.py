@@ -4,6 +4,6 @@ if TYPE_CHECKING:
     from spotify import Track
 
 
-class ServiceABC:
+class LyricsProviderABC:
     def get_text(self, track: 'Track') -> Optional[str]:
         raise NotImplemented
