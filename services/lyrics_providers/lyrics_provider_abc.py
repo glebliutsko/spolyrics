@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
-    from spotify import Track
+    from services.spotify import Track
 
 
 class LyricsProviderABC:

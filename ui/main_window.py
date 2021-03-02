@@ -10,6 +10,7 @@ from ui.designer.mainwindow import Ui_MainWindow
 if TYPE_CHECKING:
     from main import Application
     from services.spotify.spotify_api import Track
+    from services import StatusABC
 
 
 class MainWindow(QMainWindow):
@@ -31,6 +32,19 @@ class MainWindow(QMainWindow):
             self.ui.serviceComboBox.addItem(service.NAME, service)
 
         self.ui.nameTrackLabel.mousePressEvent = self.open_link_browser
+
+    def update_status(self, status: 'StatusABC'):
+        if status.is_error:
+            css_style = 'color: #ff0000'
+        else:
+            css_style = 'color: #000000'
+
+        self.ui.statusLabel.setStyleSheet(css_style)
+        self.ui.statusLabel.setText(str(status))
+
+    def clear_data_track(self):
+        self.ui.nameTrackLabel.setText(None)
+        self.ui.lyricsTextEdit.setText(None)
 
     def update_track(self, track: 'Track', lyrics: Optional[str], url: Optional[str] = None):
         self.ui.nameTrackLabel.setText(f'{track.artists_str()} - {track.title}')

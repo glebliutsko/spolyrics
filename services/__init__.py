@@ -1,1 +1,1 @@
-from services.spotify_updater import SpotifyUpdater
+from services.spotify_updater import SpotifyUpdater, StatusABC

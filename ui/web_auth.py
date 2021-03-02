@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
-from PyQt5.QtWidgets import QDialog
 from PyQt5 import QtCore
+from PyQt5.QtWidgets import QDialog
 
 from ui.designer.webauth import Ui_Dialog
 

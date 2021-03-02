@@ -1,4 +1,5 @@
 import logging
+import signal
 import sys
 from typing import TYPE_CHECKING
 
@@ -9,7 +10,6 @@ from config import Config
 from services import SpotifyUpdater
 from ui.main_window import MainWindow
 from ui.web_auth import WebAuth
-import signal
 
 if TYPE_CHECKING:
     from utils import WaitingData
@@ -30,6 +30,8 @@ class Application:
 
         self.updater.authorization_required.connect(self.browser_authorization)
         self.updater.track_changed.connect(self.window.update_track)
+        self.updater.status_change.connect(self.window.update_status)
+        self.updater.playing_stopped.connect(self.window.clear_data_track)
         self.window.ui.serviceComboBox.currentIndexChanged.connect(
             lambda index: self.updater.change_service(self.window.SERVICES_TEXT[index]())
         )
@@ -60,7 +62,7 @@ class Application:
         self.window.show()
 
         self.updater.start()
-        self.app.exec()
+        self.app.exec_()
 
 
 if __name__ == '__main__':

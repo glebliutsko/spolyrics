@@ -3,11 +3,13 @@ import hashlib
 import logging
 import random
 import string
-from typing import List, Optional, Callable
+from typing import List, Optional
 from urllib import parse
 
 import requests
+import requests.exceptions
 
+from exceptions import APIError, NetworkError
 from services.spotify import TokenInfo, SaverToken, TokenNotSave
 
 
@@ -15,12 +17,20 @@ class AuthorizeError(Exception):
     pass
 
 
+class OpenerAuthURLABC:
+    def open(self, url: str, redirect_url: str) -> str:
+        raise NotImplemented
+
+    def __call__(self, url: str, redirect_url: str) -> str:
+        return self.open(url, redirect_url)
+
+
 class OAuthPKCE:
     ALLOW_CODE_CHARS = string.ascii_letters + string.digits + '_.-~'
     AUTHORIZE_BASE_URL = 'https://accounts.spotify.com/authorize'
     TOKEN_BASE_URL = 'https://accounts.spotify.com/api/token'
 
-    def __init__(self, client_id: str, redirect_uri: str, scope: Optional[List[str]] = None):
+    def __init__(self, client_id: str, redirect_uri: str, opener: OpenerAuthURLABC, scope: Optional[List[str]] = None):
         self.logger = logging.getLogger('spolyrics')
 
         self.client_id = client_id
@@ -28,6 +38,8 @@ class OAuthPKCE:
         self.scope = scope
         if self.scope is None:
             self.scope = list()
+
+        self.opener = opener
 
     @classmethod
     def get_code_verifier(cls) -> str:
@@ -43,6 +55,16 @@ class OAuthPKCE:
     def _generate_codes(self):
         self.code_verifier = self.get_code_verifier()
         self.code_challenge = self.get_code_challenge()
+
+    def _requests(self, method: str, *args, **kwargs) -> requests.Response:
+        try:
+            response = requests.request(method, *args, **kwargs)
+            response.raise_for_status()
+            return response
+        except requests.exceptions.HTTPError as e:
+            raise APIError(self.__class__, e)
+        except requests.exceptions.RequestException as e:
+            raise NetworkError(self.__class__, e)
 
     def get_auth_url(self) -> str:
         params = {
@@ -75,7 +97,7 @@ class OAuthPKCE:
             'code_verifier': self.code_verifier
         }
 
-        response = requests.post(self.TOKEN_BASE_URL, data=data)
+        response = self._requests('POST', self.TOKEN_BASE_URL, data=data)
         answer = response.json()
         return TokenInfo.parse_response(answer)
 
@@ -86,11 +108,11 @@ class OAuthPKCE:
             'client_id': self.client_id
         }
 
-        response = requests.post(self.TOKEN_BASE_URL, data=data)
+        response = self._requests('POST', self.TOKEN_BASE_URL, data=data)
         answer = response.json()
         return TokenInfo.parse_response(answer)
 
-    def auth(self, callback_auth: Callable[[str], str]) -> str:
+    def auth(self) -> str:
         self._generate_codes()
 
         saver = SaverToken()
@@ -107,7 +129,7 @@ class OAuthPKCE:
             return token_info.token
         except TokenNotSave:
             auth_url = self.get_auth_url()
-            response_url = callback_auth(auth_url)
+            response_url = self.opener(auth_url, self.redirect_uri)
             code = self.parse_response_url(response_url)
             token_info = self.get_access_token(code)
             self.logger.info(f'New token received: {token_info.token[:5]}')
