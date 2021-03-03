@@ -1,0 +1,63 @@
+name: Upload release
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.7]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install poetry
+        run: |
+          python -m pip install --upgrade pip
+          pip install poetry
+
+      - name: Build package
+        run: |
+          poetry install
+          poetry build -n
+
+      - name: Get version
+        id: version
+        run: |
+          echo ::set-output name=version::$(poetry version -s)
+
+      - name: Chack version
+        run: |
+          if [ "${{ steps.version.outputs.version }}" != "${GITHUB_REF#refs/tags/}" ]; then exit 1; fi
+
+      - name: Get release
+        id: get_release
+        uses: bruceadams/get-release@v1.2.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Release (wheel)
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.get_release.outputs.upload_url }}
+          asset_path: ./dist/spolyrics-${{ steps.version.outputs.version }}-py3-none-any.whl
+          asset_name: spolyrics-wheel-${{ steps.version.outputs.version }}.whl
+          asset_content_type: application/zip
+
+      - name: Upload Release (sdist)
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.get_release.outputs.upload_url }}
+          asset_path: ./dist/spolyrics-${{ steps.version.outputs.version }}.tar.gz
+          asset_name: spolyrics-sdist-${{ steps.version.outputs.version }}.tar.gz
+          asset_content_type: application/zip
