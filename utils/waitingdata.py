@@ -3,10 +3,12 @@ from typing import Optional
 
 from PyQt5.QtCore import QMutex, QWaitCondition
 
+import constants
+
 
 class WaitingData:
     def __init__(self):
-        self.logger = logging.getLogger('spolyrics')
+        self.logger = logging.getLogger(constants.General.NAME)
 
         self.__mutex = QMutex()
         self.__condition = QWaitCondition()

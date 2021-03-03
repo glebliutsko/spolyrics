@@ -1,11 +1,13 @@
 import logging
 import signal
 import sys
+import os
 from typing import TYPE_CHECKING
 
 from PyQt5.QtCore import QUrl
 from PyQt5.QtWidgets import QApplication
 
+import constants
 from services import SpotifyUpdater
 from services.lyrics_providers import GeniusProvider, YandexMusicProvider
 from ui.main_window import MainWindow
@@ -19,7 +21,7 @@ class Application:
     LYRICS_PROVIDERS = [GeniusProvider, YandexMusicProvider]
 
     def __init__(self):
-        self.logger = logging.getLogger('spolyrics')
+        self.logger = logging.getLogger(constants.General.NAME)
 
         self.app = QApplication(sys.argv)
 
@@ -66,7 +68,10 @@ class Application:
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG)
+    if os.getenv('DEBUG') == '1':
+        logging.basicConfig(level=logging.DEBUG)
+
+    constants.Path.create_directory()
 
     app = Application()
     app.run()

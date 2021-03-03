@@ -9,6 +9,7 @@ from urllib import parse
 import requests
 import requests.exceptions
 
+import constants
 from exceptions import APIError, NetworkError
 from services.spotify import TokenInfo, SaverToken, TokenNotSave
 
@@ -31,7 +32,7 @@ class OAuthPKCE:
     TOKEN_BASE_URL = 'https://accounts.spotify.com/api/token'
 
     def __init__(self, client_id: str, redirect_uri: str, opener: OpenerAuthURLABC, scope: Optional[List[str]] = None):
-        self.logger = logging.getLogger('spolyrics')
+        self.logger = logging.getLogger(constants.General.NAME)
 
         self.client_id = client_id
         self.redirect_uri = redirect_uri

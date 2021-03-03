@@ -100,7 +100,7 @@ class SpotifyUpdater(QThread):
     status_change = pyqtSignal(StatusABC)
 
     def __init__(self, app: 'Application', service: 'LyricsProviderABC', *args, **kwargs):
-        self.logger = logging.getLogger('spolyrics')
+        self.logger = logging.getLogger(constants.General.NAME)
 
         super(SpotifyUpdater, self).__init__(*args, **kwargs)
         self.app = app

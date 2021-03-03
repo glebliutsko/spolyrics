@@ -12,9 +12,9 @@ class TokenNotSave(Exception):
 
 class SaverToken:
     def __init__(self):
-        self.logger = logging.getLogger('spolyrics')
+        self.logger = logging.getLogger(constants.General.NAME)
 
-        self.filename = os.path.join(constants.Path.DEFAULT_DIRECTORY_SAVE_AUTH, 'spotify.json')
+        self.filename = os.path.join(constants.Path.CONFIG, 'spotify.json')
 
     def get_token(self) -> TokenInfo:
         if not os.path.exists(self.filename):
@@ -30,3 +30,6 @@ class SaverToken:
         self.logger.debug(f'Write cache config from {self.filename}')
         with open(self.filename, 'w') as f:
             json.dump(token_info.to_dict(), f)
+
+        if os.name == 'posix':
+            os.chmod(self.filename, 0o600)

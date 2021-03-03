@@ -1,9 +1,20 @@
+import os
+
+
+class General:
+    NAME = 'spolyrics'
+    VERSION = '1.0.0'
+
+
 class Path:
-    # TODO: Путь для Windows и MacOS
-    # DEFAULT_CONFIG_FILE = os.path.join(os.getenv('HOME'), 'config/spolyrics/config.ini')
-    DEFAULT_CONFIG_FILE = './config.ini'
-    DEFAULT_DIRECTORY_SAVE_AUTH = './'
-    CACHE_LYRICS = './cache.db'
+    CONFIG = f'./.data-{General.NAME}/config'
+    CACHE = f'./.data-{General.NAME}/cache'
+
+    @classmethod
+    def create_directory(cls):
+        for i in (cls.CONFIG, cls.CACHE):
+            if not os.path.exists(i):
+                os.makedirs(i)
 
 
 class Spotify:
@@ -14,3 +25,19 @@ class Spotify:
 
 class Genius:
     TOKEN = 'CRJslq2aEJzQQfa6inGM4HCJ37GXCfJFNo-iOQFjacnZcJvI-MMm-nXT3aUa30Z3'
+
+
+if not os.getenv('DEBUG') == '1':
+    if os.name == 'posix':
+        _user_config_dir = os.getenv('XDG_CONFIG_HOME')
+        _user_cache_dir = os.getenv('XDG_CACHE_HOME')
+        if _user_config_dir is None:
+            _user_config_dir = os.path.join(os.getenv('HOME'), '.config')
+        if _user_cache_dir is None:
+            _user_cache_dir = os.path.join(os.getenv('HOME'), '.cache')
+
+        Path.CONFIG = os.path.join(_user_config_dir, General.NAME)
+        Path.CACHE = os.path.join(_user_cache_dir, General.NAME)
+    elif os.name == 'nt':
+        Path.CONFIG = os.path.join(os.getenv('APPDATA'), f'{General.NAME}/config')
+        Path.CACHE = os.path.join(os.getenv('APPDATA'), f'{General.NAME}/cache')

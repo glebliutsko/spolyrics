@@ -5,6 +5,7 @@ from urllib.parse import urljoin
 import requests
 import requests.exceptions
 
+import constants
 from exceptions import NetworkError, APIError
 from services.spotify import OAuthPKCE
 
@@ -30,7 +31,7 @@ class SpotifyAPI:
     API_BASE_URL = 'https://api.spotify.com/v1/'
 
     def __init__(self, lang: str, oauth: OAuthPKCE):
-        self.logger = logging.getLogger('spolyrics')
+        self.logger = logging.getLogger(constants.General.NAME)
 
         self.oauth = oauth
         self.__session = requests.session()

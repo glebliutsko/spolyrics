@@ -12,12 +12,10 @@ if TYPE_CHECKING:
 
 
 class SqliteCacheLyrics(CacheLyricsABC):
-    VERSION = '1'
-
     def __init__(self):
-        self.logger = logging.getLogger('spolyrics')
+        self.logger = logging.getLogger(constants.General.NAME)
 
-        self.path_db = constants.Path.CACHE_LYRICS
+        self.path_db = os.path.join(constants.Path.CACHE, 'lyrics-cache.db')
         self.db_conn: Optional['Connection'] = None
 
     @property
@@ -44,7 +42,7 @@ class SqliteCacheLyrics(CacheLyricsABC):
             cursor.execute(
                 'INSERT INTO metadata(key, value) '
                 'VALUES (?, ?)',
-                ('version', self.VERSION, )
+                ('version', constants.General.VERSION, )
             )
             cursor.commit()
 
@@ -76,8 +74,9 @@ class SqliteCacheLyrics(CacheLyricsABC):
                     ('version', )
                 ).fetchone()[0]
 
-            if version != self.VERSION:
-                self.logger.debug(f'Detect other version {version} (current {self.VERSION}). Start recreation database.')
+            if version != constants.General.VERSION:
+                self.logger.debug(f'Detect other version {version} (current {constants.General.VERSION}). '
+                                  f'Start recreation database.')
                 self._recreation_db()
 
     def get_lyrics(self, track: 'Track', provider: str) -> Optional[str]:

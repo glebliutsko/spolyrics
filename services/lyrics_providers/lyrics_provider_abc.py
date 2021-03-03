@@ -1,5 +1,7 @@
 import logging
 from typing import TYPE_CHECKING, Optional
+
+import constants
 from services.lyrics_providers import SqliteCacheLyrics
 
 if TYPE_CHECKING:
@@ -10,7 +12,7 @@ class LyricsProviderABC:
     NAME = 'ABC'
 
     def __init__(self):
-        self.logger = logging.getLogger('spolyrics')
+        self.logger = logging.getLogger(constants.General.NAME)
 
         self.cache = SqliteCacheLyrics()
 
