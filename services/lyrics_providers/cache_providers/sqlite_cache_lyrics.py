@@ -29,9 +29,13 @@ class SqliteCacheLyrics(CacheLyricsABC):
             cursor.execute(
                 'CREATE TABLE cache_lyrics'
                 '(id INTEGER PRIMARY KEY AUTOINCREMENT,'
-                'spotify_id VARCHAR (100) UNIQUE,'
+                'spotify_id VARCHAR (100),'
                 'provider VARCHAR (30),'
                 'lyrics TEXT)'
+            )
+            cursor.execute(
+                'CREATE INDEX index_spotify_id '
+                'ON cache_lyrics(spotify_id)'
             )
             cursor.execute(
                 'CREATE TABLE metadata'
@@ -94,10 +98,10 @@ class SqliteCacheLyrics(CacheLyricsABC):
     def cache_lyrics(self, track: 'Track', lyrics: str, provider: str):
         with self.db_conn as cursor:
             count_cache = cursor.execute(
-                'SELECT COUNT(cache_lyrics.id) '
+                'SELECT COUNT(id) '
                 'FROM cache_lyrics '
-                'WHERE cache_lyrics.spotify_id = ?',
-                (track.id, )
+                'WHERE spotify_id = ? AND provider = ?',
+                (track.id, provider, )
             ).fetchone()[0]
 
             if count_cache == 0:

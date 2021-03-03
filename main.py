@@ -26,7 +26,7 @@ class Application:
         self.app = QApplication(sys.argv)
 
         self.window = MainWindow(self)
-        self.webauth = WebAuth(self)
+        self._webauth = None
 
         self.updater = SpotifyUpdater(self, self.window.ui.serviceComboBox.currentData()())
 
@@ -39,6 +39,13 @@ class Application:
         )
 
         self.logger.debug('Application initialized.')
+
+    @property
+    def webauth(self) -> WebAuth:
+        if self._webauth is None:
+            self._webauth = WebAuth(self)
+
+        return self._webauth
 
     def browser_authorization(self, signal: 'WaitingData', url: str, redirect_url: str):
         def change_url(qurl: QUrl):
