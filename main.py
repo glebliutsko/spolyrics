@@ -6,8 +6,8 @@ from typing import TYPE_CHECKING
 from PyQt5.QtCore import QUrl
 from PyQt5.QtWidgets import QApplication
 
-from config import Config
 from services import SpotifyUpdater
+from services.lyrics_providers import GeniusProvider, YandexMusicProvider
 from ui.main_window import MainWindow
 from ui.web_auth import WebAuth
 
@@ -16,12 +16,12 @@ if TYPE_CHECKING:
 
 
 class Application:
+    LYRICS_PROVIDERS = [GeniusProvider, YandexMusicProvider]
+
     def __init__(self):
         self.logger = logging.getLogger('spolyrics')
 
         self.app = QApplication(sys.argv)
-
-        self.config = Config()
 
         self.window = MainWindow(self)
         self.webauth = WebAuth(self)
@@ -33,7 +33,7 @@ class Application:
         self.updater.status_change.connect(self.window.update_status)
         self.updater.playing_stopped.connect(self.window.clear_data_track)
         self.window.ui.serviceComboBox.currentIndexChanged.connect(
-            lambda index: self.updater.change_service(self.window.SERVICES_TEXT[index]())
+            lambda index: self.updater.change_service(self.LYRICS_PROVIDERS[index]())
         )
 
         self.logger.debug('Application initialized.')

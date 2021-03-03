@@ -1,4 +1,3 @@
-import logging
 from typing import TYPE_CHECKING, Optional
 
 import requests
@@ -20,11 +19,11 @@ class GeniusProvider(LyricsProviderABC):
     LYRICS_BASE_URL = 'https://genius.com/'
 
     def __init__(self):
-        self.logger = logging.getLogger('spolyrics')
+        super().__init__()
 
         self.api = GeniusAPI(constants.Genius.TOKEN, verbose=False)
 
-    def get_text(self, track: 'Track') -> Optional[str]:
+    def _requests_lyrics(self, track: 'Track') -> Optional[str]:
         try:
             track_genius = self.api.search_song(track.title.replace(' - Bonus Track', ''), track.artists[0])
             if track_genius is None:

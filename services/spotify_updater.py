@@ -139,7 +139,7 @@ class SpotifyUpdater(QThread):
                 elif diff_track.is_change:
                     self.logger.info(f'Update current track: {current_track}')
 
-                    lyrics = self.service.get_text(current_track)
+                    lyrics = self.service.get_lyrics(current_track)
 
                     self.track_changed.emit(current_track, lyrics)
                     self.current_track = current_track
@@ -152,4 +152,4 @@ class SpotifyUpdater(QThread):
                 self.logger.error(f'Notwork error: {e}')
                 self.status_change.emit(NetworkErrorStatus())
 
-            self.sleep(int(self.app.config.update_timeout))
+            self.sleep(1)

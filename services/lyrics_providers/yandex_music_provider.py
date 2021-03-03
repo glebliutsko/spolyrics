@@ -1,4 +1,3 @@
-import logging
 from typing import Optional, TYPE_CHECKING
 
 import yandex_music
@@ -15,11 +14,11 @@ class YandexMusicProvider(LyricsProviderABC):
     NAME = 'music.yandex.ru'
 
     def __init__(self):
-        self.logger = logging.getLogger('spolyrics')
+        super().__init__()
 
         self.api = yandex_music.Client(fetch_account_status=False)
 
-    def get_text(self, track: 'Track') -> Optional[str]:
+    def _requests_lyrics(self, track: 'Track') -> Optional[str]:
         try:
             search_result = self.api.search(f'{track.artists_str()} - {track.title}').tracks
             if search_result is None:

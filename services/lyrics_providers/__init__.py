@@ -1,3 +1,6 @@
+from services.lyrics_providers.cache_providers.cache_lyrics_abc import CacheLyricsABC
+from services.lyrics_providers.cache_providers.sqlite_cache_lyrics import SqliteCacheLyrics
+
 from services.lyrics_providers.lyrics_provider_abc import LyricsProviderABC
 from services.lyrics_providers.genius_provider import GeniusProvider
 from services.lyrics_providers.yandex_music_provider import YandexMusicProvider

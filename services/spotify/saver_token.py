@@ -14,7 +14,7 @@ class SaverToken:
     def __init__(self):
         self.logger = logging.getLogger('spolyrics')
 
-        self.filename = os.path.join(constants.Config.DEFAULT_DIRECTORY_SAVE_AUTH, 'spotify.json')
+        self.filename = os.path.join(constants.Path.DEFAULT_DIRECTORY_SAVE_AUTH, 'spotify.json')
 
     def get_token(self) -> TokenInfo:
         if not os.path.exists(self.filename):

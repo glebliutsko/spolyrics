@@ -1,8 +1,9 @@
-class Config:
+class Path:
     # TODO: Путь для Windows и MacOS
     # DEFAULT_CONFIG_FILE = os.path.join(os.getenv('HOME'), 'config/spolyrics/config.ini')
     DEFAULT_CONFIG_FILE = './config.ini'
     DEFAULT_DIRECTORY_SAVE_AUTH = './'
+    CACHE_LYRICS = './cache.db'
 
 
 class Spotify:

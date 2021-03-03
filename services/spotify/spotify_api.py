@@ -14,6 +14,7 @@ class Track(NamedTuple):
     title: str
     album: str
     artists: List[str]
+    url: str
 
     def artists_str(self):
         return ', '.join(self.artists)
@@ -91,9 +92,14 @@ class SpotifyAPI:
         if response is None:
             return None
 
-        id_ = response['item']['id']
+        if not response['item']['is_local']:
+            id_ = response['item']['id']
+            url = response['item']['external_urls']['spotify']
+        else:
+            id_ = response['item']['uri']
+            url = None
         album = response['item']['album']['name']
         artists = [i['name'] for i in response['item']['artists']]
         title = response['item']['name']
 
-        return Track(id_, title, album, artists)
+        return Track(id_, title, album, artists, url)
