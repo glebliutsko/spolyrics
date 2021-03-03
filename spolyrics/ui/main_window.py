@@ -4,12 +4,12 @@ from typing import TYPE_CHECKING, Optional
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import QMainWindow
 
-from ui.designer.mainwindow import Ui_MainWindow
+from spolyrics.ui.designer.mainwindow import Ui_MainWindow
 
 if TYPE_CHECKING:
-    from main import Application
-    from services.spotify.spotify_api import Track
-    from services import StatusABC
+    from spolyrics import Application
+    from spolyrics.services.spotify.spotify_api import Track
+    from spolyrics.services import StatusABC
 
 
 class MainWindow(QMainWindow):
@@ -22,8 +22,7 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-        # TODO: Проброс настоящей ссылки
-        self.url = 'https://example.com/'
+        self.url = None
 
         for service in self.app.LYRICS_PROVIDERS:
             self.ui.serviceComboBox.addItem(service.NAME, service)

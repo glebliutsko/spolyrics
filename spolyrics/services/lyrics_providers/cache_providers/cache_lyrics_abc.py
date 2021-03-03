@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from services.spotify import Track
+    from spolyrics.services.spotify import Track
 
 
 class CacheLyricsABC:

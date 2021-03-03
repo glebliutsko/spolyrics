@@ -1,20 +1,19 @@
 import logging
 import signal
 import sys
-import os
 from typing import TYPE_CHECKING
 
 from PyQt5.QtCore import QUrl
 from PyQt5.QtWidgets import QApplication
 
-import constants
-from services import SpotifyUpdater
-from services.lyrics_providers import GeniusProvider, YandexMusicProvider
-from ui.main_window import MainWindow
-from ui.web_auth import WebAuth
+from spolyrics import constants
+from spolyrics.services import SpotifyUpdater
+from spolyrics.services.lyrics_providers import GeniusProvider, YandexMusicProvider
+from spolyrics.ui.main_window import MainWindow
+from spolyrics.ui.web_auth import WebAuth
 
 if TYPE_CHECKING:
-    from utils import WaitingData
+    from spolyrics.utils import WaitingData
 
 
 class Application:
@@ -72,13 +71,3 @@ class Application:
 
         self.updater.start()
         self.app.exec_()
-
-
-if __name__ == '__main__':
-    if os.getenv('DEBUG') == '1':
-        logging.basicConfig(level=logging.DEBUG)
-
-    constants.Path.create_directory()
-
-    app = Application()
-    app.run()

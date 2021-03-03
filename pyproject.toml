@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "spolyrics"
+version = "1.0.0"
+description = "Displays the lyrics to the currently playing song"
+authors = ["Gleb Liutsko <gleb290303@gmail.com>"]
+license = "MIT"
+
+packages = [{include = "spolyrics"}]
+
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9"
+]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+PyQt5 = "^5.0"
+PyQtWebEngine = "^5.0"
+requests = "^2.0"
+yandex-music = "^1.0"
+lyricsgenius = "^2.0"
+
+[tool.poetry.dev-dependencies]
+PyQt5-stubs = "^5.15.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+spolyrics = "spolyrics.__main__:main"

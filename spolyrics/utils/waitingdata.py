@@ -3,7 +3,7 @@ from typing import Optional
 
 from PyQt5.QtCore import QMutex, QWaitCondition
 
-import constants
+from spolyrics import constants
 
 
 class WaitingData:

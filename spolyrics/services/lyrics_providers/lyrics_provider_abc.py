@@ -1,11 +1,11 @@
 import logging
 from typing import TYPE_CHECKING, Optional
 
-import constants
-from services.lyrics_providers import SqliteCacheLyrics
+from spolyrics import constants
+from spolyrics.services.lyrics_providers import SqliteCacheLyrics
 
 if TYPE_CHECKING:
-    from services.spotify import Track
+    from spolyrics.services.spotify import Track
 
 
 class LyricsProviderABC:

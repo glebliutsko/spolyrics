@@ -2,8 +2,8 @@ import json
 import logging
 import os
 
-import constants
-from services.spotify import TokenInfo
+from spolyrics import constants
+from spolyrics.services.spotify import TokenInfo
 
 
 class TokenNotSave(Exception):

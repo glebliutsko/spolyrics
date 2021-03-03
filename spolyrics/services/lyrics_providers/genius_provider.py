@@ -4,12 +4,12 @@ import requests
 import requests.exceptions
 from lyricsgenius import Genius as GeniusAPI
 
-import constants
-from exceptions import NetworkError, APIError
-from services.lyrics_providers import LyricsProviderABC
+from spolyrics import constants
+from spolyrics.exceptions import NetworkError, APIError
+from spolyrics.services.lyrics_providers import LyricsProviderABC
 
 if TYPE_CHECKING:
-    from services.spotify import Track
+    from spolyrics.services.spotify import Track
 
 
 class GeniusProvider(LyricsProviderABC):
@@ -30,7 +30,8 @@ class GeniusProvider(LyricsProviderABC):
                 self.logger.info(f'GeniusProvider: Track not found: {track_genius}')
                 return
 
-            self.logger.debug(f'GeniusProvider: Found track: {track_genius.title} ({track_genius.id})')
+            # track_genius._id, (not track_genius.id) is required for compatibility with lyricsgenius 2.0.0
+            self.logger.debug(f'GeniusProvider: Found track: {track_genius.title} ({track_genius._id})')
             return track_genius.lyrics
         except requests.exceptions.HTTPError as e:
             raise APIError(self.__class__, e)

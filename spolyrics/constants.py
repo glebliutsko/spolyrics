@@ -3,7 +3,6 @@ import os
 
 class General:
     NAME = 'spolyrics'
-    VERSION = '1.0.0'
 
 
 class Path:

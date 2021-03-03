@@ -5,9 +5,9 @@ from urllib.parse import urljoin
 import requests
 import requests.exceptions
 
-import constants
-from exceptions import NetworkError, APIError
-from services.spotify import OAuthPKCE
+from spolyrics import constants
+from spolyrics.exceptions import NetworkError, APIError
+from spolyrics.services.spotify import OAuthPKCE
 
 
 class Track(NamedTuple):

@@ -3,11 +3,11 @@ import os
 import sqlite3
 from typing import TYPE_CHECKING, Optional
 
-import constants
-from services.lyrics_providers import CacheLyricsABC
+from spolyrics import constants, __version__
+from spolyrics.services.lyrics_providers import CacheLyricsABC
 
 if TYPE_CHECKING:
-    from services.spotify import Track
+    from spolyrics.services.spotify import Track
     from sqlite3 import Connection
 
 
@@ -46,7 +46,7 @@ class SqliteCacheLyrics(CacheLyricsABC):
             cursor.execute(
                 'INSERT INTO metadata(key, value) '
                 'VALUES (?, ?)',
-                ('version', constants.General.VERSION, )
+                ('version', __version__, )
             )
             cursor.commit()
 
@@ -78,8 +78,8 @@ class SqliteCacheLyrics(CacheLyricsABC):
                     ('version', )
                 ).fetchone()[0]
 
-            if version != constants.General.VERSION:
-                self.logger.debug(f'Detect other version {version} (current {constants.General.VERSION}). '
+            if version != __version__:
+                self.logger.debug(f'Detect other version {version} (current {__version__}). '
                                   f'Start recreation database.')
                 self._recreation_db()
 

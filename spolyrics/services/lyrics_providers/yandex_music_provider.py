@@ -3,11 +3,11 @@ from typing import Optional, TYPE_CHECKING
 import yandex_music
 import yandex_music.exceptions
 
-from exceptions import NetworkError, APIError
-from services.lyrics_providers import LyricsProviderABC
+from spolyrics.exceptions import NetworkError, APIError
+from spolyrics.services.lyrics_providers import LyricsProviderABC
 
 if TYPE_CHECKING:
-    from services.spotify import Track
+    from spolyrics.services.spotify import Track
 
 
 class YandexMusicProvider(LyricsProviderABC):

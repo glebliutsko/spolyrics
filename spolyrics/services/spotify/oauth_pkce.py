@@ -9,9 +9,9 @@ from urllib import parse
 import requests
 import requests.exceptions
 
-import constants
-from exceptions import APIError, NetworkError
-from services.spotify import TokenInfo, SaverToken, TokenNotSave
+from spolyrics import constants
+from spolyrics.exceptions import APIError, NetworkError
+from spolyrics.services.spotify import TokenInfo, SaverToken, TokenNotSave
 
 
 class AuthorizeError(Exception):

@@ -5,14 +5,14 @@ from typing import TYPE_CHECKING
 import requests
 from PyQt5.QtCore import QThread, pyqtSignal, QWaitCondition
 
-import constants
-from exceptions import NetworkError
-from services.spotify import SpotifyAPI, OAuthPKCE, Track, OpenerAuthURLABC
-from utils import WaitingData
+from spolyrics import constants
+from spolyrics.exceptions import NetworkError
+from spolyrics.services.spotify import SpotifyAPI, OAuthPKCE, Track, OpenerAuthURLABC
+from spolyrics.utils import WaitingData
 
 if TYPE_CHECKING:
-    from main import Application
-    from services.lyrics_providers import LyricsProviderABC
+    from spolyrics import Application
+    from spolyrics.services.lyrics_providers import LyricsProviderABC
 
 
 class StatusABC:
