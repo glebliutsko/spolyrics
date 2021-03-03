@@ -10,7 +10,7 @@ import requests
 import requests.exceptions
 
 from spolyrics import constants
-from spolyrics.exceptions import APIError, NetworkError
+from spolyrics.exceptions import HTTPError, NetworkError
 from spolyrics.services.spotify import TokenInfo, SaverToken, TokenNotSave
 
 
@@ -63,7 +63,7 @@ class OAuthPKCE:
             response.raise_for_status()
             return response
         except requests.exceptions.HTTPError as e:
-            raise APIError(self.__class__, e)
+            raise HTTPError(self.__class__, e)
         except requests.exceptions.RequestException as e:
             raise NetworkError(self.__class__, e)
 

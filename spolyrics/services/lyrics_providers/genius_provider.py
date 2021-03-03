@@ -5,7 +5,7 @@ import requests.exceptions
 from lyricsgenius import Genius as GeniusAPI
 
 from spolyrics import constants
-from spolyrics.exceptions import NetworkError, APIError
+from spolyrics.exceptions import NetworkError, HTTPError
 from spolyrics.services.lyrics_providers import LyricsProviderABC
 
 if TYPE_CHECKING:
@@ -34,6 +34,6 @@ class GeniusProvider(LyricsProviderABC):
             self.logger.debug(f'GeniusProvider: Found track: {track_genius.title} ({track_genius._id})')
             return track_genius.lyrics
         except requests.exceptions.HTTPError as e:
-            raise APIError(self.__class__, e)
+            raise HTTPError(self.__class__, e)
         except requests.exceptions.RequestException as e:
             raise NetworkError(self.__class__, e)

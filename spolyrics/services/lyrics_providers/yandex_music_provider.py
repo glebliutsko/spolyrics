@@ -3,7 +3,7 @@ from typing import Optional, TYPE_CHECKING
 import yandex_music
 import yandex_music.exceptions
 
-from spolyrics.exceptions import NetworkError, APIError
+from spolyrics.exceptions import NetworkError, HTTPError
 from spolyrics.services.lyrics_providers import LyricsProviderABC
 
 if TYPE_CHECKING:
@@ -32,7 +32,7 @@ class YandexMusicProvider(LyricsProviderABC):
                                  f'({track_yandex_music.id}) not found.')
                 return None
         except yandex_music.exceptions.BadRequest as e:
-            raise APIError(self.__class__, e)
+            raise HTTPError(self.__class__, e)
         except yandex_music.exceptions.NetworkError as e:
             raise NetworkError(self.__class__, e)
 

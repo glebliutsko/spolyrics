@@ -6,7 +6,7 @@ import requests
 from PyQt5.QtCore import QThread, pyqtSignal, QWaitCondition
 
 from spolyrics import constants
-from spolyrics.exceptions import NetworkError
+from spolyrics.exceptions import WrapperRequestsException, APIError
 from spolyrics.services.spotify import SpotifyAPI, OAuthPKCE, Track, OpenerAuthURLABC
 from spolyrics.utils import WaitingData
 
@@ -148,8 +148,10 @@ class SpotifyUpdater(QThread):
                     self.status_change.emit(SpotifyPlayingStatus())
                 else:
                     self.status_change.emit(SpotifyNotPlayingStatus())
-            except NetworkError as e:
+            except WrapperRequestsException as e:
                 self.logger.error(f'Notwork error: {e}')
                 self.status_change.emit(NetworkErrorStatus())
+            except APIError as e:
+                self.logger.error(f'Api error: {e.response}')
 
             self.sleep(1)

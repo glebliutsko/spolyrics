@@ -6,7 +6,7 @@ import requests
 import requests.exceptions
 
 from spolyrics import constants
-from spolyrics.exceptions import NetworkError, APIError
+from spolyrics.exceptions import NetworkError, HTTPError, APIError
 from spolyrics.services.spotify import OAuthPKCE
 
 
@@ -80,7 +80,7 @@ class SpotifyAPI:
                 self._auth()
                 response = self.__session.request(method, url_endpoint, params=params, data=data)
             else:
-                raise APIError(self.__class__, e)
+                raise HTTPError(self.__class__, e)
         except requests.exceptions.RequestException as e:
             raise NetworkError(self.__class__, e)
 
@@ -92,6 +92,9 @@ class SpotifyAPI:
         response = self._requests('GET', 'me/player/currently-playing')
         if response is None:
             return None
+        elif response['item'] is None:
+            # spotify, WTF?
+            raise APIError('JSON Key "item" is None', response)
 
         if not response['item']['is_local']:
             id_ = response['item']['id']
