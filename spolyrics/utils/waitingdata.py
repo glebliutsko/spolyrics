@@ -16,6 +16,7 @@ class WaitingData:
         self.__data = None
 
     def wait(self):
+        self.__mutex.lock()
         self.logger.debug(f'Lock: {self}')
         self.__condition.wait(self.__mutex)
 
