@@ -5,7 +5,7 @@ on:
     types: [created]
 
 jobs:
-  build:
+  wheel-sdist:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -16,32 +16,23 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
-
       - name: Install poetry
         run: |
           python -m pip install --upgrade pip
           pip install poetry
-
-      - name: Build package
-        run: |
-          poetry install
-          poetry build -n
-
       - name: Get version
         id: version
         run: |
           echo ::set-output name=version::$(poetry version -s)
-
-      - name: Chack version
+      - name: Build package
         run: |
-          if [ "${{ steps.version.outputs.version }}" != "${GITHUB_REF#refs/tags/}" ]; then exit 1; fi
-
+          poetry install
+          poetry build -n
       - name: Get release
         id: get_release
         uses: bruceadams/get-release@v1.2.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Upload Release (wheel)
         uses: actions/upload-release-asset@v1
         env:
@@ -51,7 +42,6 @@ jobs:
           asset_path: ./dist/spolyrics-${{ steps.version.outputs.version }}-py3-none-any.whl
           asset_name: spolyrics-${{ steps.version.outputs.version }}-py3-none-any.whl
           asset_content_type: application/zip
-
       - name: Upload Release (sdist)
         uses: actions/upload-release-asset@v1
         env:
@@ -61,3 +51,79 @@ jobs:
           asset_path: ./dist/spolyrics-${{ steps.version.outputs.version }}.tar.gz
           asset_name: spolyrics-${{ steps.version.outputs.version }}.tar.gz
           asset_content_type: application/zip
+
+  linux-bin:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.9]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install poetry
+        run: |
+          python -m pip install --upgrade pip
+          pip install poetry
+      - name: Get version
+        id: version
+        run: |
+          echo ::set-output name=version::$(poetry version -s)
+      - name: Build package
+        run: |
+          poetry install
+          poetry run pyinstaller --onefile spolyrics/__main__.py
+      - name: Get release
+        id: get_release
+        uses: bruceadams/get-release@v1.2.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload Release (linux-bin)
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.get_release.outputs.upload_url }}
+          asset_path: ./dist/__main__
+          asset_name: spolyrics-linux
+          asset_content_type: application/octet-stream
+
+  windows-bin:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        python-version: [ 3.9 ]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install poetry
+        run: |
+          python -m pip install --upgrade pip
+          pip install poetry
+      - name: Get version
+        id: version
+        run: |
+          echo "::set-output name=version::$(poetry version -s)"
+      - name: Build package
+        run: |
+          poetry install
+          poetry run pyinstaller --onefile -w spolyrics/__main__.py
+      - name: Get release
+        id: get_release
+        uses: bruceadams/get-release@v1.2.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload Release (linux-bin)
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.get_release.outputs.upload_url }}
+          asset_path: ./dist/__main__.exe
+          asset_name: spolyrics-windows.exe
+          asset_content_type: application/octet-stream
