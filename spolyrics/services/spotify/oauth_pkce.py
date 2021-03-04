@@ -18,6 +18,12 @@ class AuthorizeError(Exception):
     pass
 
 
+class TokenInvalid(Exception):
+    def __init__(self, reason: str):
+        super().__init__(f'Token invalid because of: {reason}')
+        self.reason = reason
+
+
 class OpenerAuthURLABC:
     def open(self, url: str, redirect_url: str) -> str:
         raise NotImplemented
@@ -63,6 +69,14 @@ class OAuthPKCE:
             response.raise_for_status()
             return response
         except requests.exceptions.HTTPError as e:
+            response = e.response
+            if e.response.status_code == 400:
+                response_json = response.json()
+                if response_json.get('error_description') == 'Refresh token revoked':
+                    raise TokenInvalid('revoked')
+                elif response_json.get('error_description') == 'Invalid refresh token':
+                    raise TokenInvalid('invalid')
+
             raise HTTPError(self.__class__, e)
         except requests.exceptions.RequestException as e:
             raise NetworkError(self.__class__, e)
@@ -113,6 +127,15 @@ class OAuthPKCE:
         answer = response.json()
         return TokenInfo.parse_response(answer)
 
+    def _get_new_token(self) -> TokenInfo:
+        auth_url = self.get_auth_url()
+        response_url = self.opener(auth_url, self.redirect_uri)
+        code = self.parse_response_url(response_url)
+        token_info = self.get_access_token(code)
+        self.logger.info(f'New token received: {token_info.token[:5]}')
+
+        return token_info
+
     def auth(self) -> str:
         self._generate_codes()
 
@@ -129,11 +152,12 @@ class OAuthPKCE:
 
             return token_info.token
         except TokenNotSave:
-            auth_url = self.get_auth_url()
-            response_url = self.opener(auth_url, self.redirect_uri)
-            code = self.parse_response_url(response_url)
-            token_info = self.get_access_token(code)
-            self.logger.info(f'New token received: {token_info.token[:5]}')
-
+            self.logger.info(f'Cache token not found')
+            token_info = self._get_new_token()
+            saver.save_token(token_info)
+            return token_info.token
+        except TokenInvalid as e:
+            self.logger.info(f'Token invalid: {e}')
+            token_info = self._get_new_token()
             saver.save_token(token_info)
             return token_info.token
