@@ -50,6 +50,15 @@ class SpotifyNotPlayingStatus(StatusABC):
         return 'Spotify not playing'
 
 
+class LoadingLyricsStatus(StatusABC):
+    def __init__(self):
+        super().__init__(False)
+
+    @property
+    def short_description(self) -> str:
+        return 'Loading lyrics'
+
+
 class NetworkErrorStatus(StatusABC):
     def __init__(self):
         super().__init__(True)
@@ -138,6 +147,8 @@ class SpotifyUpdater(QThread):
                     self.current_track = current_track
                 elif diff_track.is_change:
                     self.logger.info(f'Update current track: {current_track}')
+
+                    self.status_change.emit(LoadingLyricsStatus())
 
                     lyrics = self.service.get_lyrics(current_track)
 
