@@ -39,7 +39,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [[package]]
 name = "lyricsgenius"
-version = "2.0.2"
+version = "3.0.0"
 description = "Download lyrics and metadata from Genius.com"
 category = "main"
 optional = false
@@ -51,9 +51,8 @@ requests = ">=2.20.0"
 
 [package.extras]
 checks = ["tox (>=3.2,<4.0)", "doc8", "flake8", "flake8-bugbear", "pygments"]
-dev = ["sphinx (>=3.2,<4.0)", "sphinx-rtd-theme", "pytest (>=6.0,<7.0)", "tox (>=3.2,<4.0)", "doc8", "flake8", "flake8-bugbear", "pygments"]
-docs = ["sphinx (>=3.2,<4.0)", "sphinx-rtd-theme"]
-tests = ["pytest (>=6.0,<7.0)"]
+dev = ["sphinx (>=3.3,<4.0)", "sphinx-rtd-theme", "tox (>=3.2,<4.0)", "doc8", "flake8", "flake8-bugbear", "pygments"]
+docs = ["sphinx (>=3.3,<4.0)", "sphinx-rtd-theme"]
 
 [[package]]
 name = "pyqt5"
@@ -181,7 +180,7 @@ urllib3 = "1.26.3"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "e97ac27cec04499a8094aa9d5dc2b84e758b47c1c522da87ab8c84bdae024eff"
+content-hash = "45ba2eeca8c949f1af2698b0514af654306f6f3c8d9504261977133ae870f18f"
 
 [metadata.files]
 beautifulsoup4 = [
@@ -202,8 +201,8 @@ idna = [
     {file = "idna-2.10.tar.gz", hash = "sha256:b307872f855b18632ce0c21c5e45be78c0ea7ae4c15c828c20788b26921eb3f6"},
 ]
 lyricsgenius = [
-    {file = "lyricsgenius-2.0.2-py3-none-any.whl", hash = "sha256:302481df7b04d2c0be98aac14a05635967d85a2cb80e641330bff71db3366ef2"},
-    {file = "lyricsgenius-2.0.2.tar.gz", hash = "sha256:76b013862fbcc32486588ff1512412e3222b523c5f7807cad187e388e1bda2e9"},
+    {file = "lyricsgenius-3.0.0-py3-none-any.whl", hash = "sha256:450ebbc056c50aa2f1c9494eca5383b01d225c0b99b7aa0fc84dee084dcfbe61"},
+    {file = "lyricsgenius-3.0.0.tar.gz", hash = "sha256:89a81cbcf9e414a98201cc395a4d570589ae1e609018c85c50d32a64800189ef"},
 ]
 pyqt5 = [
     {file = "PyQt5-5.15.3-cp36.cp37.cp38.cp39-abi3-macosx_10_13_intel.whl", hash = "sha256:69fdceed983ebd388f44ceab9b8a6c2c086c79c705182fcc7b06837e2ccf7ba3"},

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "spolyrics"
-version = "1.0.1"
+version = "1.0.2"
 description = "Displays the lyrics to the currently playing song"
 authors = ["Gleb Liutsko <gleb290303@gmail.com>"]
 license = "MIT"
@@ -20,7 +20,7 @@ PyQt5 = "^5.0"
 PyQtWebEngine = "^5.0"
 requests = "^2.0"
 yandex-music = "^1.0"
-lyricsgenius = "^2.0"
+lyricsgenius = ">=2.0.0"
 
 [tool.poetry.dev-dependencies]
 PyQt5-stubs = "^5.15.2"

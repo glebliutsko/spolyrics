@@ -30,8 +30,7 @@ class GeniusProvider(LyricsProviderABC):
                 self.logger.info(f'GeniusProvider: Track not found: {track_genius}')
                 return
 
-            # track_genius._id, (not track_genius.id) is required for compatibility with lyricsgenius 2.0.0
-            self.logger.debug(f'GeniusProvider: Found track: {track_genius.title} ({track_genius._id})')
+            self.logger.debug(f'GeniusProvider: Found track: {track_genius.title}')
             return track_genius.lyrics
         except requests.exceptions.HTTPError as e:
             raise HTTPError(self.__class__, e)
