@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "spolyrics"
-version = "1.0.3"
+version = "1.0.4"
 description = "Displays the lyrics to the currently playing song"
 authors = ["Gleb Liutsko <gleb290303@gmail.com>"]
 license = "MIT"
