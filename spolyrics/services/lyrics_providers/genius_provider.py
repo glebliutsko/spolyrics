@@ -25,7 +25,7 @@ class GeniusProvider(LyricsProviderABC):
 
     def _requests_lyrics(self, track: 'Track') -> Optional[str]:
         try:
-            track_genius = self.api.search_song(track.title.replace(' - Bonus Track', ''), track.artists[0])
+            track_genius = self.api.search_song(f'{track.title.replace(" - Bonus Track", "")} by {track.artists[0]}')
             if track_genius is None:
                 self.logger.info(f'GeniusProvider: Track not found: {track_genius}')
                 return
